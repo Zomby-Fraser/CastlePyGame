@@ -4,6 +4,7 @@ from deck import Card, Deck
 from player import Player
 from setup import Setup
 from rules import Rules
+from draw import Draw
 
 
 # Initialize the Pygame font module
@@ -12,43 +13,12 @@ pygame.font.init()
 # Create a font object
 font = pygame.font.Font(None, 36)  # Choose the font size
 
-# Create a function to render text
-def draw_text(text, surface, x, y):
-    text_obj = font.render(text, 1, pygame.Color('White'))  # Creates a surface with the text
-    text_rect = text_obj.get_rect(center=(x, y))  # Gets a rect object with the dimensions of the surface
-    surface.blit(text_obj, text_rect)  # Draws the surface onto another surface
-
-def draw_cards():
-    for i, card in enumerate(player.hand):
-        card_rect = player.hand_rect[i]
-        card_rect[0] = (i)*window_x/len(player.hand)
-        window.blit(card_images[(card.rank,card.suit)], (card_rect[0], card_rect[1]))
-    for i, card in enumerate(player.castle):
-        card_rect = player.castle_rect[i]
-        if i < 3:
-            window.blit(card_images["Back"], (card_rect[0], card_rect[1]))
-        else:
-            window.blit(card_images[(card.rank,card.suit)], (card_rect[0], card_rect[1]))
-    for i, card in enumerate(computer.hand):
-        card_rect = computer.hand_rect[i]
-        card_rect[0] = (i)*window_x/len(computer.hand)
-        window.blit(card_images["Back"], (card_rect[0], card_rect[1]))
-    for i, card in enumerate(computer.castle):
-        card_rect = computer.castle_rect[i]
-        if i < 3:
-            window.blit(card_images["Back"], (card_rect[0], card_rect[1]))
-        else:
-            window.blit(card_images[(card.rank,card.suit)], (card_rect[0], card_rect[1]))
-    for i, card in enumerate(center_pile):
-        window.blit(card_images[(card.rank,card.suit)], (window_x/2-deck.card_width-50+(100*i), window_y/2-deck.card_height+50))
-    if len(entire_pile) > 4:
-        window.blit(card_images[entire_pile[-5].rank, entire_pile[-5].suit], (window_x/2-deck.card_width-300, window_y/2-deck.card_height+50))
-
 pygame.init()
 window_x = 800  
 window_y = 800
 window = pygame.display.set_mode((window_x, window_y))
 pygame.display.set_caption("Card Game")
+
 
 center_pile = []
 entire_pile =[]
@@ -65,6 +35,7 @@ computer = Player("Computer 1", "computer", 1)
 player_list = [player, computer]
 rules = Rules()
 setup = Setup(player_list)
+draw_tool = Draw(window, window_x, window_y, player_list, card_images, font)
 while running:
     # Event handling
     # During the event handling phase:
@@ -111,7 +82,7 @@ while running:
         computer.hand_rect.append(pygame.Rect(0, window_y-800, deck.card_width, deck.card_height))
 
     window.fill((0, 0, 0))  # Clear the screen
-    draw_cards()  # Draw all cards
+    draw_tool.draw_cards(center_pile, entire_pile, deck)  # Draw all cards
     textsurface = font.render(str(len(entire_pile)), False, (255, 255, 255))
     window.blit(textsurface,(window_x/2-deck.card_width-300, window_y/2-deck.card_height+50))
     pygame.display.flip()  # Update the display
