@@ -67,3 +67,8 @@ class Player:
         if not active_player:
             active_player = player_list[0]
         return active_player
+    
+    def refill_hand(self, deck, window_y):
+        while len(self.hand) < 3:
+            self.hand.append(deck.draw_card())
+            self.hand_rect.append(pygame.Rect(0, window_y-200, deck.card_width, deck.card_height))

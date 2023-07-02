@@ -7,25 +7,23 @@ from rules import Rules
 from draw import Draw
 
 
-# Initialize the Pygame font module
+# Initialize the Pygame font
 pygame.font.init()
-
-# Create a font object
 font = pygame.font.Font(None, 36)  # Choose the font size
 
+#Initialize window
 pygame.init()
 window_x = 800  
 window_y = 800
 window = pygame.display.set_mode((window_x, window_y))
 pygame.display.set_caption("Card Game")
 
-
+#Initialize game state properties
 center_pile = []
 entire_pile =[]
 active_player = None
-first_card_selected = False
 
-# Game loop
+#Initialize game objects
 running = True
 deck = Deck()
 deck.shuffle()
@@ -36,6 +34,7 @@ player_list = [player, computer]
 rules = Rules()
 setup = Setup(player_list)
 draw_tool = Draw(window, window_x, window_y, player_list, card_images, font)
+
 while running:
     # Event handling
     # During the event handling phase:
@@ -53,7 +52,9 @@ while running:
                     break
 
         if active_player:
-            active_player = active_player.play_hand(event, center_pile, entire_pile, deck, window_y, player_list)
+            next_player = active_player.play_hand(event, center_pile, entire_pile, deck, window_y, player_list)
+            active_player.refill_hand(deck, window_y)
+            active_player = next_player
 
     ####Setup the game
     #Create both player's initial Castle and their locations on-screen.
@@ -72,14 +73,12 @@ while running:
     if len(computer.castle) == 6 and len(player.castle) == 6:
         if len(deck.cards) == 34:
             active_player = setup.find_and_place_starting_card(center_pile, entire_pile)
-
-    #
-    if len(player.hand) < 3:
-        player.hand.append(deck.draw_card())
-        player.hand_rect.append(pygame.Rect(0, window_y-200, deck.card_width, deck.card_height))
-    if len(computer.hand) < 3:
-        computer.hand.append(deck.draw_card())
-        computer.hand_rect.append(pygame.Rect(0, window_y-800, deck.card_width, deck.card_height))
+            if len(player.hand) < 3:
+                player.hand.append(deck.draw_card())
+                player.hand_rect.append(pygame.Rect(0, window_y-200, deck.card_width, deck.card_height))
+            if len(computer.hand) < 3:
+                computer.hand.append(deck.draw_card())
+                computer.hand_rect.append(pygame.Rect(0, window_y-800, deck.card_width, deck.card_height))
 
     window.fill((0, 0, 0))  # Clear the screen
     draw_tool.draw_cards(center_pile, entire_pile, deck)  # Draw all cards
