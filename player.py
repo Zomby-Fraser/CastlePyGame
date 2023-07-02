@@ -16,11 +16,18 @@ class Player:
         rules = Rules()
         active_player = None
         if self.type == "human":
+            if not rules.has_playable_card(self, entire_pile[-1]):
+                active_player = self.next_turn(player_list)
+                self.hand = self.hand + entire_pile
+                print(self.hand_rect)
+                self.hand_rect = self.hand_rect + [pygame.Rect(0,0,deck.card_width, deck.card_height)]*len(entire_pile)
+                center_pile.clear()
+                entire_pile.clear()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 for i, (card_rect, card) in enumerate(zip(self.hand_rect, self.hand)):
                     if card_rect.collidepoint(mouse_x, mouse_y):
-                        if rules.is_card_playable(self.hand[i], center_pile[-1]):
+                        if (len(entire_pile) > 0 and rules.is_card_playable(self.hand[i], center_pile[-1])) or len(entire_pile) == 0:
                             center_pile.append(self.hand[i])
                             entire_pile.append(self.hand[i])
                             if len(center_pile) > 4:

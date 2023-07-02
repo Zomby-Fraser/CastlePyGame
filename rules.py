@@ -14,11 +14,8 @@ class Rules:
         else:
             return False
         
-    def check_for_playable_card(self, hand, top_pile_card):
-        for card in hand:
-            if self.is_card_playable(card, top_pile_card):
+    def has_playable_card(self, player, top_card):
+        for card in player.hand:
+            if self.is_card_playable(card, top_card):
                 return True
         return False
-    
-    def move_pile_to_hand(hand, pile):
-        return hand+pile

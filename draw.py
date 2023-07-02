@@ -8,6 +8,8 @@ class Draw:
         self.player_list = player_list
         self.card_images = card_images
         self.font = font
+        self.player_y_castle = [350, 650]
+        self.player_y_hand = [200, 800]
     # Create a function to render text
     def draw_text(self, text, surface, x, y):
         text_obj = self.font.render(text, 1, pygame.Color('White'))  # Creates a surface with the text
@@ -15,11 +17,12 @@ class Draw:
         surface.blit(text_obj, text_rect)  # Draws the surface onto another surface
 
     def draw_cards(self, center_pile, entire_pile, deck):
-        for player in self.player_list:
+        for j, player in enumerate(self.player_list):
             for i, card in enumerate(player.hand):
                 card_rect = player.hand_rect[i]
+                print(card_rect)
                 card_rect[0] = (i)*self.window_x/len(player.hand)
-                self.window.blit(self.card_images[(card.rank,card.suit)], (card_rect[0], card_rect[1]))
+                self.window.blit(self.card_images[(card.rank,card.suit)], (card_rect[0], self.window_y-self.player_y_hand[j]))
             for i, card in enumerate(player.castle):
                 card_rect = player.castle_rect[i]
                 if i < 3:
