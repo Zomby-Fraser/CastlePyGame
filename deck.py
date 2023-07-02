@@ -27,10 +27,10 @@ class Deck:
             print(card)
 
     def build(self):
-        suits = ["Spades", "Hearts", "Diamonds", "Clubs"]
-        ranks = ["Two", "Three", "Four", "Five", "Six", "Seven", 
-                 "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace"]
-        values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 100]
+        suits = ["Clubs", "Diamonds", "Spades", "Hearts"]
+        ranks = ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", 
+                 "Eight", "Nine", "Ten", "Jack", "Queen", "King"]
+        values = [14, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
         for suit in suits:
             for rank, value in zip(ranks, values):
@@ -44,8 +44,8 @@ class Deck:
     
     def load_card_images(self, filename):
         card_images = {}
-        ranks = ["Two", "Three", "Four", "Five", "Six", "Seven", 
-                "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace", "Joker", "Back"]
+        ranks = ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", 
+                "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Joker"]
         suits = ["Spades", "Hearts", "Diamonds", "Clubs"]
         
         # Load the sprite sheet
@@ -69,7 +69,14 @@ class Deck:
 
                 # Add the card image to the dictionary
                 card_images[(rank, suit)] = image
+        # Assume the back image is the last image in the sprite sheet
+        back_x = len(ranks) * self.card_width
+        back_y = 0  # adjust this if the back image is not in the first row
+        back_image = sprite_sheet.subsurface(pygame.Rect(back_x, back_y, self.card_width, self.card_height))
 
-        # print(card_images)
+        # Add the back image to the dictionary
+        card_images["Back"] = back_image
+        
+        print(card_images)
         return card_images
 

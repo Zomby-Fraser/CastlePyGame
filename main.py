@@ -2,11 +2,12 @@ import pygame
 import random
 from deck import Card, Deck
 from player import Player
+from setup import Setup
+from rules import Rules
 
 
 # Initialize the Pygame font module
 pygame.font.init()
-starting_card = Card("Spade", "Back", 100)
 
 # Create a font object
 font = pygame.font.Font(None, 36)  # Choose the font size
@@ -20,34 +21,28 @@ def draw_text(text, surface, x, y):
 def draw_cards():
     for i, card in enumerate(player.hand):
         card_rect = player.hand_rect[i]
+        card_rect[0] = (i)*window_x/len(player.hand)
         window.blit(card_images[(card.rank,card.suit)], (card_rect[0], card_rect[1]))
     for i, card in enumerate(player.castle):
         card_rect = player.castle_rect[i]
         if i < 3:
-            window.blit(card_images[("Back",card.suit)], (card_rect[0], card_rect[1]))
+            window.blit(card_images["Back"], (card_rect[0], card_rect[1]))
         else:
             window.blit(card_images[(card.rank,card.suit)], (card_rect[0], card_rect[1]))
     for i, card in enumerate(computer.hand):
         card_rect = computer.hand_rect[i]
-        window.blit(card_images[("Back",card.suit)], (card_rect[0], card_rect[1]))
+        card_rect[0] = (i)*window_x/len(computer.hand)
+        window.blit(card_images["Back"], (card_rect[0], card_rect[1]))
     for i, card in enumerate(computer.castle):
         card_rect = computer.castle_rect[i]
         if i < 3:
-            window.blit(card_images[("Back",card.suit)], (card_rect[0], card_rect[1]))
+            window.blit(card_images["Back"], (card_rect[0], card_rect[1]))
         else:
             window.blit(card_images[(card.rank,card.suit)], (card_rect[0], card_rect[1]))
     for i, card in enumerate(center_pile):
-        window.blit(card_images[(card.rank,card.suit)], (window_x/2-deck.card_width, window_y/2-deck.card_height+50))
-
-def is_card_playable(selected_card, top_pile_card):
-    if selected_card.rank in ["Two", "Three", "Seven", "Ten"]:
-        return True
-    elif top_pile_card.rank == "Seven" and top_pile_card.value > selected_card.value:
-        return True
-    elif selected_card.value > top_pile_card.value:
-        return True
-    else:
-        return False
+        window.blit(card_images[(card.rank,card.suit)], (window_x/2-deck.card_width-50+(100*i), window_y/2-deck.card_height+50))
+    if len(entire_pile) > 4:
+        window.blit(card_images[entire_pile[-5].rank, entire_pile[-5].suit], (window_x/2-deck.card_width-300, window_y/2-deck.card_height+50))
 
 pygame.init()
 window_x = 800  
@@ -56,16 +51,20 @@ window = pygame.display.set_mode((window_x, window_y))
 pygame.display.set_caption("Card Game")
 
 center_pile = []
+entire_pile =[]
 active_player = None
+first_card_selected = False
 
 # Game loop
 running = True
 deck = Deck()
 deck.shuffle()
-deck.print_deck()
 card_images = deck.load_card_images('CuteCards.png')
-player = Player()
-computer = Player()
+player = Player("Player 1", "human", 0)
+computer = Player("Computer 1", "computer", 1)
+player_list = [player, computer]
+rules = Rules()
+setup = Setup(player_list)
 while running:
     # Event handling
     # During the event handling phase:
@@ -80,70 +79,44 @@ while running:
                     player.castle.append(card)
                     player.hand_rect.pop(i)  # Remove the card's Rect from hand
                     player.hand.pop(i)  # Remove the card from hand
-                    print(len(player.castle))
                     break
+
+        if active_player:
+            active_player = active_player.play_hand(event, center_pile, entire_pile, deck, window_y, player_list)
+
     ####Setup the game
     #Create both player's initial Castle and their locations on-screen.
     if not player.castle and not computer.castle:
-        for i in range(-3, 0):  # i will be -3, -2, -1
-            player.castle.append(deck.draw_card())
-            player.castle_rect.append((100 + (200 * (i + 3)), window_y-350))
-            computer.castle.append(deck.draw_card())
-            computer.castle_rect.append((100 + (200 * (i + 3)), window_y-650))
+        setup.setup_castle(deck, window_y)
 
     #Create bother player's hands and their locations on screen
     if not player.hand and not computer.hand:
-        for i in range(6):
-            player.hand.append(deck.draw_card())
-            computer.hand.append(deck.draw_card())
-            player_card_pos = (50 + (100 * i), window_y-200)
-            computer_card_pos = (50 + (100 * (i)), window_y-800)
-            player.hand_rect.append(pygame.Rect(*player_card_pos, deck.card_width, deck.card_height))  # Create a Rect for this card
-            computer.hand_rect.append(pygame.Rect(*computer_card_pos, deck.card_width, deck.card_height))  # Create a Rect for the computer's card
+        setup.deal_init_hand(deck, window_y)
 
     #Have the computer player randomly select which cards to put on the castle.
     if len(computer.castle) == 3:
-        random_numbers = sorted(random.sample(range(0, 6), 3), reverse=True)
-        for card_num in random_numbers:
-            computer.castle_rect.append(computer.castle_rect[len(computer.castle_rect)-3])
-            computer.castle.append(computer.hand[card_num])
-            computer.hand_rect.pop(card_num)  # Remove the card's Rect from hand
-            computer.hand.pop(card_num)
+        setup.computer_place_castle_cards()
 
     #Place starting pile card
     if len(computer.castle) == 6 and len(player.castle) == 6:
         if len(deck.cards) == 34:
-            all_starting_cards = player.hand + computer.hand
-            for card in all_starting_cards:
-                if starting_card.rank != "Four" and (card.rank == "Four" or card.value < starting_card.value):
-                    starting_card = card
-            for i, card in enumerate(player.hand):
-                if card == starting_card:
-                    center_pile.append(card)
-                    player.hand.pop(i)
-                    player.hand_rect.pop(i)
-                    break
-            for i, card in enumerate(computer.hand):
-                if card == starting_card:
-                    center_pile.append(card)
-                    computer.hand.pop(i)
-                    computer.hand_rect.pop(i)
-                    break
-            #Person who played the starting card picks up a new one, and the other person goes
-            if len(player.hand) > len(computer.hand):
-                active_player = "Player 1"
-                computer.hand.append(deck.draw_card())
-                computer.hand_rect.append((400, window_y-800))
-            else:
-                active_player = "Computer 1"
-                player.hand.append(deck.draw_card())
-                player.hand_rect.append((400, window_y-200))
+            active_player = setup.find_and_place_starting_card(center_pile, entire_pile)
+
+    #
+    if len(player.hand) < 3:
+        player.hand.append(deck.draw_card())
+        player.hand_rect.append(pygame.Rect(0, window_y-200, deck.card_width, deck.card_height))
+    if len(computer.hand) < 3:
+        computer.hand.append(deck.draw_card())
+        computer.hand_rect.append(pygame.Rect(0, window_y-800, deck.card_width, deck.card_height))
 
     window.fill((0, 0, 0))  # Clear the screen
     draw_cards()  # Draw all cards
+    textsurface = font.render(str(len(entire_pile)), False, (255, 255, 255))
+    window.blit(textsurface,(window_x/2-deck.card_width-300, window_y/2-deck.card_height+50))
     pygame.display.flip()  # Update the display
-
-    pygame.display.flip()  # Update the display
-
+    # if played:
+    #     pygame.time.wait(1000)  # Wait for a second
+    #     played = False  # Reset card_played to False
 
 pygame.quit()
