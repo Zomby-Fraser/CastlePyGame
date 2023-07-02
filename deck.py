@@ -13,17 +13,24 @@ class Card:
         self.rank = rank
         self.value = value
 
+    def __str__(self):
+        return f'{self.rank} of {self.suit} with value {self.value}'
+
 # Deck class
 class Deck:
     def __init__(self):
         self.cards = []
         self.build()
 
+    def print_deck(self):
+        for card in self.cards:
+            print(card)
+
     def build(self):
         suits = ["Spades", "Hearts", "Diamonds", "Clubs"]
         ranks = ["Two", "Three", "Four", "Five", "Six", "Seven", 
-                 "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace", "Back"]
-        values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+                 "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace"]
+        values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 100]
 
         for suit in suits:
             for rank, value in zip(ranks, values):

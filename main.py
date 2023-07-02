@@ -6,6 +6,7 @@ from player import Player
 
 # Initialize the Pygame font module
 pygame.font.init()
+starting_card = Card("Spade", "Back", 100)
 
 # Create a font object
 font = pygame.font.Font(None, 36)  # Choose the font size
@@ -35,6 +36,8 @@ def draw_cards():
             window.blit(card_images[("Back",card.suit)], (card_rect[0], card_rect[1]))
         else:
             window.blit(card_images[(card.rank,card.suit)], (card_rect[0], card_rect[1]))
+    for i, card in enumerate(center_pile):
+        window.blit(card_images[(card.rank,card.suit)], (window_x/2-deck.card_width, window_y/2-deck.card_height+50))
 
 def is_card_playable(selected_card, top_pile_card):
     if selected_card.rank in ["Two", "Three", "Seven", "Ten"]:
@@ -52,10 +55,14 @@ window_y = 800
 window = pygame.display.set_mode((window_x, window_y))
 pygame.display.set_caption("Card Game")
 
+center_pile = []
+active_player = None
+
 # Game loop
 running = True
 deck = Deck()
 deck.shuffle()
+deck.print_deck()
 card_images = deck.load_card_images('CuteCards.png')
 player = Player()
 computer = Player()
@@ -65,7 +72,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.MOUSEBUTTONDOWN:
+        elif event.type == pygame.MOUSEBUTTONDOWN and len(player.castle) < 6:
             mouse_x, mouse_y = pygame.mouse.get_pos()
             for i, (card_rect, card) in enumerate(zip(player.hand_rect, player.hand)):
                 if card_rect.collidepoint(mouse_x, mouse_y):
@@ -73,9 +80,9 @@ while running:
                     player.castle.append(card)
                     player.hand_rect.pop(i)  # Remove the card's Rect from hand
                     player.hand.pop(i)  # Remove the card from hand
+                    print(len(player.castle))
                     break
     ####Setup the game
-
     #Create both player's initial Castle and their locations on-screen.
     if not player.castle and not computer.castle:
         for i in range(-3, 0):  # i will be -3, -2, -1
@@ -102,6 +109,35 @@ while running:
             computer.castle.append(computer.hand[card_num])
             computer.hand_rect.pop(card_num)  # Remove the card's Rect from hand
             computer.hand.pop(card_num)
+
+    #Place starting pile card
+    if len(computer.castle) == 6 and len(player.castle) == 6:
+        if len(deck.cards) == 34:
+            all_starting_cards = player.hand + computer.hand
+            for card in all_starting_cards:
+                if starting_card.rank != "Four" and (card.rank == "Four" or card.value < starting_card.value):
+                    starting_card = card
+            for i, card in enumerate(player.hand):
+                if card == starting_card:
+                    center_pile.append(card)
+                    player.hand.pop(i)
+                    player.hand_rect.pop(i)
+                    break
+            for i, card in enumerate(computer.hand):
+                if card == starting_card:
+                    center_pile.append(card)
+                    computer.hand.pop(i)
+                    computer.hand_rect.pop(i)
+                    break
+            #Person who played the starting card picks up a new one, and the other person goes
+            if len(player.hand) > len(computer.hand):
+                active_player = "Player 1"
+                computer.hand.append(deck.draw_card())
+                computer.hand_rect.append((400, window_y-800))
+            else:
+                active_player = "Computer 1"
+                player.hand.append(deck.draw_card())
+                player.hand_rect.append((400, window_y-200))
 
     window.fill((0, 0, 0))  # Clear the screen
     draw_cards()  # Draw all cards
