@@ -55,10 +55,15 @@ while running:
 
         if active_player:
             next_player = active_player.play_hand(event, center_pile, entire_pile, deck, player_list)
+            #Clear the deck if 10 is played
+            if len(entire_pile) > 0:
+                if entire_pile[-1].rank == "Ten":
+                    entire_pile.clear()
+                    center_pile.clear()
+                    active_player.refill_hand(deck)
+                    continue
             active_player.refill_hand(deck)
             active_player = next_player
-
-    #Clear the de
 
     ####Setup the game
     #Create both player's initial Castle and their locations on-screen.
