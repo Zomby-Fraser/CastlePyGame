@@ -27,3 +27,10 @@ class Rules:
             if self.is_card_playable(card, top_card, player_debug, debug_type):
                 return True
         return False
+    
+    def playable_card_list(self, player, top_card, player_debug = False, debug_type = "Always Playable"):
+        playable_cards = []
+        for card in player.hand:
+            if self.is_card_playable(card, top_card, player_debug, debug_type):
+                playable_cards.append(card)
+        return playable_cards

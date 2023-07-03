@@ -77,6 +77,5 @@ class Deck:
         # Add the back image to the dictionary
         card_images["Back"] = back_image
         
-        print(card_images)
         return card_images
 

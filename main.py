@@ -28,7 +28,7 @@ running = True
 deck = Deck()
 deck.shuffle()
 card_images = deck.load_card_images('CuteCards.png')
-player = Player("Player 1", "human", 0, True, "Never Playable")
+player = Player("Player 1", "human", 0, False, None)
 computer = Player("Computer 1", "computer", 1, False, None)
 player_list = [player, computer]
 rules = Rules(player_list, debug_mode = True)

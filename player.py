@@ -14,6 +14,10 @@ class Player:
         self.debug_mode = debug_mode
         self.debug_type = debug_type
 
+    def print_hand(self):
+        for card in self.hand:
+            print(card)
+
     def play_hand(self, event, center_pile, entire_pile, deck, window_y, player_list):
         rules = Rules(player_list, debug_mode = self.debug_mode, debug_type = self.debug_type)
         active_player = None
@@ -22,8 +26,9 @@ class Player:
         if self.type == "human":
             #Check if they do not have any playable cards. They do not, they get the pile added to their hand
             if not rules.has_playable_card(self, entire_pile[-1] if entire_pile else None, self.debug_mode, self.debug_type):
+                self.print_hand()
+                print(entire_pile[-1])
                 self.hand = self.hand + entire_pile
-                # print(self.hand_rect)
                 self.hand_rect = self.hand_rect + [pygame.Rect(0,0,deck.card_width, deck.card_height)]*len(entire_pile)
                 center_pile.clear()
                 entire_pile.clear()
@@ -48,7 +53,6 @@ class Player:
                             break
                         elif not rules.is_card_playable(self.hand[i], center_pile[-1], self.debug_mode, self.debug_type):
                             print(f"Wrong card try again: {self.hand[i].rank}")
-                            # print(self.hand_rect)
                 if to_remove is not None:
                     self.hand_rect.pop(to_remove)  # Remove the card's Rect from hand
                     self.hand.pop(to_remove)  # Remove the card from hand
@@ -59,7 +63,15 @@ class Player:
                 
         #If player is of type "computer"
         elif self.type == "computer":
-            selected_card = random.choice(self.hand)
+            if not rules.has_playable_card(self, entire_pile[-1] if entire_pile else None, self.debug_mode, self.debug_type):
+                self.print_hand()
+                print(entire_pile[-1])
+                self.hand = self.hand + entire_pile
+                self.hand_rect = self.hand_rect + [pygame.Rect(0,0,deck.card_width, deck.card_height)]*len(entire_pile)
+                center_pile.clear()
+                entire_pile.clear()
+            playable_cards = rules.playable_card_list(self, entire_pile[-1] if entire_pile else None, self.debug_mode, self.debug_type)
+            selected_card = random.choice(playable_cards)
             index_of_selected_card = self.hand.index(selected_card)
             center_pile.append(selected_card)
             entire_pile.append(selected_card)
@@ -69,8 +81,6 @@ class Player:
             self.hand.pop(index_of_selected_card)  # Remove the card from hand
             self.hand.append(deck.draw_card())
             self.hand_rect.append(pygame.Rect(0, window_y-800, deck.card_width, deck.card_height))
-            print(f"computer played {selected_card}")
-            # print("Next!")
             active_player = self.next_turn(player_list)
             return active_player
         return self
