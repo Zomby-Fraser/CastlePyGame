@@ -28,10 +28,10 @@ running = True
 deck = Deck()
 deck.shuffle()
 card_images = deck.load_card_images('CuteCards.png')
-player = Player("Player 1", "human", 0)
-computer = Player("Computer 1", "computer", 1)
+player = Player("Player 1", "human", 0, True, "Never Playable")
+computer = Player("Computer 1", "computer", 1, False, None)
 player_list = [player, computer]
-rules = Rules()
+rules = Rules(player_list, debug_mode = True)
 setup = Setup(player_list)
 draw_tool = Draw(window, window_x, window_y, player_list, card_images, font)
 

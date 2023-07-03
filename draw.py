@@ -20,7 +20,7 @@ class Draw:
         for j, player in enumerate(self.player_list):
             for i, card in enumerate(player.hand):
                 card_rect = player.hand_rect[i]
-                print(card_rect)
+                # print(len(player.hand))
                 card_rect[0] = (i)*self.window_x/len(player.hand)
                 self.window.blit(self.card_images[(card.rank,card.suit)], (card_rect[0], self.window_y-self.player_y_hand[j]))
             for i, card in enumerate(player.castle):
