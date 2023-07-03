@@ -53,6 +53,7 @@ class Player:
                             break
                         elif not rules.is_card_playable(self.hand[i], center_pile[-1], self.debug_mode, self.debug_type):
                             print(f"Wrong card try again: {self.hand[i].rank}")
+                #If a correct card has been picked, remove it and draw a new card
                 if to_remove is not None:
                     self.hand_rect.pop(to_remove)  # Remove the card's Rect from hand
                     self.hand.pop(to_remove)  # Remove the card from hand
