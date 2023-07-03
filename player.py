@@ -81,6 +81,7 @@ class Player:
             index_of_selected_card = self.hand.index(selected_card)
             center_pile.append(selected_card)
             entire_pile.append(selected_card)
+            print(f"Computer played: {selected_card}")
             if len(center_pile) > 4:
                 center_pile.pop(0)
             self.hand_rect.pop(index_of_selected_card)  # Remove the card's Rect from hand

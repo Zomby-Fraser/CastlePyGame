@@ -8,19 +8,28 @@ class Rules:
         self.config = config
 
     def is_card_playable(self, selected_card, top_pile_card, player_debug = False, debug_type = "Always Playable"):
+        print(f"Top Card: {top_pile_card}")
+        print(f"Selected Card: {selected_card}")
         if not top_pile_card:
+            print(1)
             return True
         elif self.debug_mode and player_debug and debug_type == "Always Playable":
+            print(2)
             return True
         elif self.debug_mode and player_debug and debug_type == "Never Playable":
+            print(3)
             return False
         elif selected_card.rank in ["Two", "Three", "Seven", "Ten"]:
+            print(4)
             return True
         elif top_pile_card.rank == "Seven" and top_pile_card.value > selected_card.value:
+            print(5)
             return True
-        elif selected_card.value >= top_pile_card.value:
+        elif top_pile_card.rank != "Seven" and selected_card.value >= top_pile_card.value:
+            print(6)
             return True
         else:
+            print(7)
             return False
         
     def has_playable_card(self, player, top_card, player_debug = False, debug_type = "Always Playable"):
