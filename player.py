@@ -26,7 +26,7 @@ class Player:
         #If the player is of type "human"
         if self.type == "human":
             #Check if they do not have any playable cards. They do not, they get the pile added to their hand
-            if not rules.has_playable_card(self, entire_pile[-1] if entire_pile else None, self.debug_mode, self.debug_type):
+            if not rules.has_playable_card(self, entire_pile, self.debug_mode, self.debug_type):
                 self.print_hand()
                 print(entire_pile[-1])
                 self.hand = self.hand + entire_pile
@@ -48,14 +48,14 @@ class Player:
                 for i, (card_rect, card) in enumerate(zip(self.hand_rect, self.hand)):
                     if card_rect.collidepoint(mouse_x, mouse_y):
                         print(f"Clicked on card {card}")  # Print which card was clicked on
-                        if (len(entire_pile) > 0 and rules.is_card_playable(self.hand[i], center_pile[-1], self.debug_mode, self.debug_type)) or len(entire_pile) == 0:
+                        if (len(entire_pile) > 0 and rules.is_card_playable(self.hand[i], entire_pile, self.debug_mode, self.debug_type)) or len(entire_pile) == 0:
                             center_pile.append(self.hand[i])
                             entire_pile.append(self.hand[i])
                             if len(center_pile) > 4:
                                 center_pile.pop(0)
                             to_remove = i
                             break
-                        elif not rules.is_card_playable(self.hand[i], center_pile[-1], self.debug_mode, self.debug_type):
+                        elif not rules.is_card_playable(self.hand[i], entire_pile, self.debug_mode, self.debug_type):
                             print(f"Wrong card try again: {self.hand[i].rank}")
                 #If a correct card has been picked, remove it and draw a new card
                 if to_remove is not None:
@@ -69,14 +69,14 @@ class Player:
                 
         #If player is of type "computer"
         elif self.type == "computer":
-            if not rules.has_playable_card(self, entire_pile[-1] if entire_pile else None, self.debug_mode, self.debug_type):
+            if not rules.has_playable_card(self, entire_pile, self.debug_mode, self.debug_type):
                 self.print_hand()
                 print(entire_pile[-1])
                 self.hand = self.hand + entire_pile
                 self.hand_rect = self.hand_rect + [pygame.Rect(0,0,deck.card_width, deck.card_height)]*len(entire_pile)
                 center_pile.clear()
                 entire_pile.clear()
-            playable_cards = rules.playable_card_list(self, entire_pile[-1] if entire_pile else None, self.debug_mode, self.debug_type)
+            playable_cards = rules.playable_card_list(self, entire_pile, self.debug_mode, self.debug_type)
             selected_card = random.choice(playable_cards)
             index_of_selected_card = self.hand.index(selected_card)
             center_pile.append(selected_card)

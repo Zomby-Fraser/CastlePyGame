@@ -62,24 +62,29 @@ while running:
                     center_pile.clear()
                     active_player.refill_hand(deck)
                     continue
+                if rules.check_four_in_a_row(entire_pile):
+                    entire_pile.clear()
+                    center_pile.clear()
+                    active_player.refill_hand(deck)
+                    continue
             active_player.refill_hand(deck)
             active_player = next_player
 
     ####Setup the game
     #Create both player's initial Castle and their locations on-screen.
-    if not player.castle and not computer.castle:
+    if not player.castle and not computer.castle and len(deck.cards) > 0:
         setup.setup_castle(deck)
 
     #Create bother player's hands and their locations on screen
-    if not player.hand and not computer.hand:
+    if not player.hand and not computer.hand and len(deck.cards) > 0:
         setup.deal_init_hand(deck)
 
     #Have the computer player randomly select which cards to put on the castle.
-    if len(computer.castle) == 3:
+    if len(computer.castle) == 3 and len(deck.cards) > 0:
         setup.computer_place_castle_cards()
 
     #Place starting pile card
-    if len(computer.castle) == 6 and len(player.castle) == 6:
+    if len(computer.castle) == 6 and len(player.castle) == 6 and len(deck.cards) > 0:
         if len(deck.cards) == 34:
             active_player = setup.find_and_place_starting_card(center_pile, entire_pile)
             if len(player.hand) < 3:
