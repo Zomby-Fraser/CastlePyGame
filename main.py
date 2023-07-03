@@ -5,6 +5,7 @@ from player import Player
 from setup import Setup
 from rules import Rules
 from draw import Draw
+from config import Config
 
 
 # Initialize the Pygame font
@@ -15,6 +16,7 @@ font = pygame.font.Font(None, 36)  # Choose the font size
 pygame.init()
 window_x = 800  
 window_y = 800
+config = Config(window_x,window_y)
 window = pygame.display.set_mode((window_x, window_y))
 pygame.display.set_caption("Card Game")
 
@@ -28,12 +30,12 @@ running = True
 deck = Deck()
 deck.shuffle()
 card_images = deck.load_card_images('CuteCards.png')
-player = Player("Player 1", "human", 0, False, None)
-computer = Player("Computer 1", "computer", 1, False, None)
+player = Player(config, "Player 1", "human", 0, False, None)
+computer = Player(config, "Computer 1", "computer", 1, False, None)
 player_list = [player, computer]
-rules = Rules(player_list, debug_mode = True)
-setup = Setup(player_list)
-draw_tool = Draw(window, window_x, window_y, player_list, card_images, font)
+rules = Rules(config, player_list, debug_mode = True)
+setup = Setup(config, player_list)
+draw_tool = Draw(config, window, player_list, card_images, font)
 
 while running:
     # Event handling
@@ -52,18 +54,20 @@ while running:
                     break
 
         if active_player:
-            next_player = active_player.play_hand(event, center_pile, entire_pile, deck, window_y, player_list)
-            active_player.refill_hand(deck, window_y)
+            next_player = active_player.play_hand(event, center_pile, entire_pile, deck, player_list)
+            active_player.refill_hand(deck)
             active_player = next_player
+
+    #Clear the de
 
     ####Setup the game
     #Create both player's initial Castle and their locations on-screen.
     if not player.castle and not computer.castle:
-        setup.setup_castle(deck, window_y)
+        setup.setup_castle(deck)
 
     #Create bother player's hands and their locations on screen
     if not player.hand and not computer.hand:
-        setup.deal_init_hand(deck, window_y)
+        setup.deal_init_hand(deck)
 
     #Have the computer player randomly select which cards to put on the castle.
     if len(computer.castle) == 3:

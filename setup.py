@@ -4,22 +4,23 @@ from itertools import chain
 from deck import Card
 
 class Setup:
-    def __init__(self, player_list):
+    def __init__(self, config, player_list):
         self.player_list = player_list
         self.player_y_castle = [350, 650]
         self.player_y_hand = [200, 800]
+        self.config = config
 
-    def setup_castle(self, deck, window_y):
+    def setup_castle(self, deck):
         for i in range(-3, 0):  # i will be -3, -2, -1
             for j in range(len(self.player_list)):
                 self.player_list[j].castle.append(deck.draw_card())
-                self.player_list[j].castle_rect.append((100 + (200 * (i + 3)), window_y-self.player_y_castle[j]))
+                self.player_list[j].castle_rect.append((100 + (200 * (i + 3)), self.config.window_y-self.player_y_castle[j]))
 
-    def deal_init_hand(self, deck, window_y):
+    def deal_init_hand(self, deck):
         for i in range(6):
             for j in range(len(self.player_list)):
                 self.player_list[j].hand.append(deck.draw_card())
-                card_pos = (50 + (100 * i), window_y-self.player_y_hand[j])
+                card_pos = (50 + (100 * i), self.config.window_y-self.player_y_hand[j])
                 self.player_list[j].hand_rect.append(pygame.Rect(*card_pos, deck.card_width, deck.card_height))
 
     def computer_place_castle_cards(self):
