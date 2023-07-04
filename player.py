@@ -70,8 +70,6 @@ class Player:
         #If player is of type "computer"
         elif self.type == "computer":
             if not rules.has_playable_card(self, entire_pile, self.debug_mode, self.debug_type):
-                self.print_hand()
-                print(entire_pile[-1])
                 self.hand = self.hand + entire_pile
                 self.hand_rect = self.hand_rect + [pygame.Rect(0,0,deck.card_width, deck.card_height)]*len(entire_pile)
                 center_pile.clear()
