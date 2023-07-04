@@ -4,16 +4,21 @@ import random
 
 class Player:
     def __init__(self, config, name, type, id, debug_mode = False, debug_type = "Always Playable"):
-        self.hand = []
-        self.castle = []
-        self.hand_rect = []
-        self.castle_rect = []
+        self.name = name
+        self.hand = {}
+        self.castle = {}
         self.id = id
         self.name = name
         self.type = type
         self.debug_mode = debug_mode
         self.debug_type = debug_type
         self.config = config
+
+    def add_card_to_hand(self, card, rect):
+        self.hand[card] = rect
+
+    def add_card_to_castle(self, card, rect):
+        self.castle[card] = rect
 
     def print_hand(self):
         for card in self.hand:

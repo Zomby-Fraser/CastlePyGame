@@ -8,13 +8,18 @@ pygame.display.set_caption("Card Game")
 
 # Card class
 class Card:
+    _next_id = 1  # Class variable to assign unique IDs to each card
+
     def __init__(self, suit, rank, value):
+        self.id = Card._next_id
+        Card._next_id += 1
         self.suit = suit
         self.rank = rank
         self.value = value
 
     def __str__(self):
-        return f'{self.rank} of {self.suit} with value {self.value}'
+        return f'Card #{self.id}: {self.rank} of {self.suit} with value {self.value}'
+
 
 # Deck class
 class Deck:
@@ -32,9 +37,9 @@ class Deck:
                  "Eight", "Nine", "Ten", "Jack", "Queen", "King"]
         values = [14, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
-        for suit in suits:
+        for suit in enumerate(suits):
             for rank, value in zip(ranks, values):
-                self.cards.append(Card(suit, rank, value))
+                self.cards.append(Card(suit, rank, value, id))
 
     def shuffle(self):
         random.shuffle(self.cards)
