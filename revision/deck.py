@@ -23,5 +23,5 @@ class Deck:
     def shuffle(self):
         random.shuffle(self.cards)
         
-    def draw_card(self):
+    def drawCard(self):
         return self.cards.pop()
