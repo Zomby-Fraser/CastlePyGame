@@ -41,14 +41,35 @@ for player in player_list:
 
 for player in player_list:
     player.setCastle(game_rules.castle_slots)
+
+# Start game
+
+player_lowest_cards = {}    
+# Get each player's smallest value, non-special card
+for player in player_list:
+    player_lowest_cards[player] = player.hand.lowestNormalCard()
+starting_card = {'player': None, 'idx': None}
+for player in player_lowest_cards:
+    if player_lowest_cards[player]['lowest_card'].value == 4:
+        starting_card['player'] = player
+        starting_card['idx'] = player_lowest_cards[player]['idx']
+        break
+    elif starting_card:
+        if starting.card > player_lowest_cards[player]['lowest_card'].value
+            starting_card['player'] = player
+            starting_card['idx'] = player_lowest_cards[player]['idx']
+    else:
+        starting_card['player'] = player
+        starting_card['idx'] = player_lowest_cards[player]['idx']
+
+# Have player with lowest card automatically play the lowest card, then draw a new card
+starting_player = starting_card['player']
+starting_card_idx = starting_card['idx']
+pile.cards.append(starting_player.hand[starting_card_idx])
+starting_player.playCard(starting_card_idx)
+starting_player.hand.append(deck.cards[-1])
+deck.drawCard()
         
-while True:
-    
-    # Check for player with smallest card. 
-    for player in player_list:
-        pass
-        
-        
-        
-        
-        
+# Create player turn order to start game
+player_turn_order = []
+
