@@ -55,6 +55,17 @@ class Hand:
             return True
         else:
             return False
-                    
 
-   
+    '''
+        Finds the lowest value non-special card in the player's hand
+        RETURNS -> Class Card
+    '''
+    def lowestNormalCard(self):
+        lowest_normal_card = None
+        for card in hand.cards:
+            if not lowest_normal_card:
+                lowest_normal_card = card
+            else:
+                if card.value < lowest_normal_card.value and not card.is_special:
+                    lowest_normal_card = card
+       return lowest_normal_card
