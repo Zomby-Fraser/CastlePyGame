@@ -9,6 +9,17 @@ class Deck:
         ranks = ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", 
                  "Eight", "Nine", "Ten", "Jack", "Queen", "King"],
         values = [14, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+        is_special = [False, True, True, False, False, False, True, False, False, True, False, False, False]
+
+        ''' 
+            This determines the property of the card, if it has one.
+            * None - Normal card
+            * 'reset' - Resets the deck so any card can be played after this card
+            * 'copy' - Copies the card before it. Three duplicates and a 'copy' card clears the deck as if 4 of the same kind were played.
+            * 'lower' - Reverses the game's behavior. The number this is assigned is the upper cut off. By default this is a 7 card. If a 7 is played then 4,5,6 must be played, or another special card.
+            * 'clear' - Clears the pile from play.
+        '''
+        special_property = [None, 'reset', 'copy', None, None, None, 'lower', None, None, 'clear', None, None, None]
     ):
         self.cards = []
     
