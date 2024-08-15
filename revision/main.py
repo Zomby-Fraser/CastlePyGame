@@ -80,8 +80,15 @@ tmp = player_list[:starting_card_idx]
 del player_list[:starting_card_idx] 
 player_list += tmp
 
+turn_idx = 0
 
+# Start the game!
 
+while True:
+    turn_idx += 1 
+    curr_player = player_list[turn_idx]
+
+    curr_player.hand.listPlayableCards(pile)
 
 
 
