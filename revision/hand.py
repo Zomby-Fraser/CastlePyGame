@@ -70,5 +70,5 @@ class Hand:
                     lowest_normal_card = card
        return {
            'lowest_card': lowest_normal_card,
-           'index': i
+           'idx': i
        }
