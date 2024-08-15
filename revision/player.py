@@ -31,8 +31,5 @@ class Player:
                     break
                 self.castle.cards_up.append(self.hand.cards[i])
                 self.playCard()
-                
-    def playTurn(self):
-        
-                
+
                 
