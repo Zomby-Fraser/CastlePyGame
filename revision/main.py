@@ -6,6 +6,8 @@ from game_config import GameConfig
 from hand import Hand
 from pile i
 
+from collections import deque
+
 # Initialize game settings
 game_rules = GameConfig()
 
@@ -49,16 +51,19 @@ player_lowest_cards = {}
 for player in player_list:
     player_lowest_cards[player] = player.hand.lowestNormalCard()
 starting_card = {'player': None, 'idx': None}
-for player in player_lowest_cards:
+for player_list_idx, player in enumerate(player_lowest_cards):
     if player_lowest_cards[player]['lowest_card'].value == 4:
+        starting_player_idx = player_list_idx
         starting_card['player'] = player
         starting_card['idx'] = player_lowest_cards[player]['idx']
         break
     elif starting_card:
         if starting.card > player_lowest_cards[player]['lowest_card'].value
+            starting_player_idx = player_list_idx
             starting_card['player'] = player
             starting_card['idx'] = player_lowest_cards[player]['idx']
     else:
+        starting_player_idx = player_list_idx
         starting_card['player'] = player
         starting_card['idx'] = player_lowest_cards[player]['idx']
 
@@ -70,6 +75,16 @@ starting_player.playCard(starting_card_idx)
 starting_player.hand.append(deck.cards[-1])
 deck.drawCard()
         
-# Create player turn order to start game
-player_turn_order = []
+# Rearrange player_list so 
+tmp = player_list[:starting_card_idx] 
+del player_list[:starting_card_idx] 
+player_list += tmp
+
+
+
+
+
+
+
+
 
