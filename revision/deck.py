@@ -25,8 +25,8 @@ class Deck:
     
         for deck_no in range(number_of_decks):
             for suit in enumerate(suits):
-                for rank, value in zip(ranks, values):
-                    self.cards.append(Card(suit, rank, value))
+                for rank, value in zip(ranks, values, is_special, special_property):
+                    self.cards.append(Card(suit, rank, value, is_special, special_property))
 
     def __str__(self):
         return f'Card #{self.id}: {self.rank} of {self.suit} with value {self.value}'
