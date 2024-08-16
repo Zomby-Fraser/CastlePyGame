@@ -10,6 +10,8 @@ class Card:
         self.value = value
         self.is_special = is_special
         self.special_proprety = special_property
+        self.player_id = None
+        self.player_hand_idx = None
         
         def __str__(self):
             return f'Card #{self.id}: {self.rank} of {self.suit} with value {self.value}'
