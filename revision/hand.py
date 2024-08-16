@@ -15,7 +15,7 @@ class Hand:
     def listPlayableCards(self, pile):
         self.playable_card = []
         for card in self.cards:
-            if isCardPlayable(card, pile):
+            if isCardPlayableCopyCheck(card, pile):
                 self.playable_card.append(card)
 
     '''
