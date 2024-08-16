@@ -32,4 +32,17 @@ class Player:
                 self.castle.cards_up.append(self.hand.cards[i])
                 self.playCard()
 
-                
+    def chooseCardHuman(self):
+        for i, cards
+    
+    def chooseCard(self):
+        if self.player_type == 'human':
+            chooseCardHuman(self)
+        else:
+            chooseCardPC(self)
+
+
+
+
+
+           
