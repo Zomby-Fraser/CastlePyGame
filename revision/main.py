@@ -89,7 +89,8 @@ while True:
     curr_player = player_list[turn_idx]
 
     curr_player.hand.listPlayableCards(pile)
-
+    for card in curr_player:
+        
 
 
 
