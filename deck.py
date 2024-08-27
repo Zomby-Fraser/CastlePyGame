@@ -1,86 +1,38 @@
-import pygame
 import random
+from card import Card
 
-# Pygame setup
-pygame.init()
-window = pygame.display.set_mode((800, 600))
-pygame.display.set_caption("Card Game")
+class Deck:
+    def __init__(
+        self, 
+        number_of_decks = 1,
+        suits = ["Clubs", "Diamonds", "Spades", "Hearts"],
+        ranks = ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", 
+                 "Eight", "Nine", "Ten", "Jack", "Queen", "King"],
+        values = [14, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+        is_special = [False, True, True, False, False, False, True, False, False, True, False, False, False]
 
-# Card class
-class Card:
-    _next_id = 1  # Class variable to assign unique IDs to each card
-
-    def __init__(self, suit, rank, value):
-        self.id = Card._next_id
-        Card._next_id += 1
-        self.suit = suit
-        self.rank = rank
-        self.value = value
+        ''' 
+            This determines the property of the card, if it has one.
+            * None - Normal card
+            * 'reset' - Resets the deck so any card can be played after this card
+            * 'copy' - Copies the card before it. Three duplicates and a 'copy' card clears the deck as if 4 of the same kind were played.
+            * 'lower' - Reverses the game's behavior. The number this is assigned is the upper cut off. By default this is a 7 card. If a 7 is played then 4,5,6 must be played, or another special card.
+            * 'clear' - Clears the pile from play.
+        '''
+        special_property = [None, 'reset', 'copy', None, None, None, 'lower', None, None, 'clear', None, None, None]
+    ):
+        self.cards = []
+    
+        for deck_no in range(number_of_decks):
+            for suit in enumerate(suits):
+                for rank, value in zip(ranks, values, is_special, special_property):
+                    self.cards.append(Card(suit, rank, value, is_special, special_property))
 
     def __str__(self):
         return f'Card #{self.id}: {self.rank} of {self.suit} with value {self.value}'
-
-
-# Deck class
-class Deck:
-    def __init__(self):
-        self.cards = []
-        self.build()
-
-    def print_deck(self):
-        for card in self.cards:
-            print(card)
-
-    def build(self):
-        suits = ["Clubs", "Diamonds", "Spades", "Hearts"]
-        ranks = ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", 
-                 "Eight", "Nine", "Ten", "Jack", "Queen", "King"]
-        values = [14, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-
-        for suit in enumerate(suits):
-            for rank, value in zip(ranks, values):
-                self.cards.append(Card(suit, rank, value, id))
-
+                    
     def shuffle(self):
         random.shuffle(self.cards)
-
-    def draw_card(self):
+        
+    def drawCard(self):
         return self.cards.pop()
-    
-    def load_card_images(self, filename):
-        card_images = {}
-        ranks = ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", 
-                "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Joker"]
-        suits = ["Spades", "Hearts", "Diamonds", "Clubs"]
-        
-        # Load the sprite sheet
-        sprite_sheet = pygame.image.load(filename).convert_alpha()
-
-        # Assume each card image is 73 pixels wide and 98 pixels high
-        # You'll need to change these numbers if your sprite sheet has different dimensions
-        self.card_width = 100
-        self.card_height = 144
-
-        for suit in suits:
-            for rank in ranks:
-                if ((rank == "Joker")):
-                    continue
-                # Calculate the position of the card image on the sprite sheet
-                x = ranks.index(rank) * self.card_width
-                y = suits.index(suit) * self.card_height
-
-                # Extract the card image
-                image = sprite_sheet.subsurface(pygame.Rect(x, y, self.card_width, self.card_height))
-
-                # Add the card image to the dictionary
-                card_images[(rank, suit)] = image
-        # Assume the back image is the last image in the sprite sheet
-        back_x = len(ranks) * self.card_width
-        back_y = 0  # adjust this if the back image is not in the first row
-        back_image = sprite_sheet.subsurface(pygame.Rect(back_x, back_y, self.card_width, self.card_height))
-
-        # Add the back image to the dictionary
-        card_images["Back"] = back_image
-        
-        return card_images
-
