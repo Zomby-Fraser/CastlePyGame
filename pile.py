@@ -3,7 +3,7 @@ class Pile:
     def __init__(self):
         self.cards = []
 
-     '''
+    '''
         Recursively checks for the next card that doesn't have the speical_propery = 'copy'.
         Effectively used to tell what cards are actually playable since the 'copy' property acts as a wild card
         INPUTS -> 
@@ -12,10 +12,10 @@ class Pile:
             
         RETURNS -> `Class Card`
     '''
-    def nonCopyValue(i):
+    def nonCopyValue(self, i):
         if abs(i) <= len(self.pile.cards):
             if self.pile.cards[i].special_property == 'copy':
-                return nonCopyValue(i-1)
+                return self.nonCopyValue(i-1)
             else:
                 return self.pile.cards[i]
         else:

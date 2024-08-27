@@ -15,7 +15,7 @@ class Hand:
     def listPlayableCards(self, pile):
         self.playable_card = []
         for card in self.cards:
-            if isCardPlayableCopyCheck(card, pile):
+            if self.isCardPlayableCopyCheck(card, pile):
                 self.playable_card.append(card)
 
     '''
@@ -27,7 +27,7 @@ class Hand:
                 - The active pile in the game
         RETURNS -> Bool
     '''
-    def isCardPlayableCopyCheck(card, pile):
+    def isCardPlayableCopyCheck(self, card, pile):
         pile_top_card = pile.cards[-1]
         if card.is_special:
             return True
@@ -47,11 +47,11 @@ class Hand:
         RETURNS -> Bool
     '''
     def isCardPlayable(self, pile_card, hand_card):
-        if reference_card.special_property == 'reset':
+        if self.reference_card.special_property == 'reset':
             return True
-        elif reference_card.special_property == 'lower' and reference_card.value > hand_card.value:
+        elif self.reference_card.special_property == 'lower' and self.reference_card.value > hand_card.value:
             return True
-        elif reference_card.value <= hand_card.value:
+        elif self.reference_card.value <= hand_card.value:
             return True
         else:
             return False
@@ -62,13 +62,13 @@ class Hand:
     '''
     def lowestNormalCard(self):
         lowest_normal_card = None
-        for i, card in enumerate(hand.cards):
+        for i, card in enumerate(self.cards):
             if not lowest_normal_card:
                 lowest_normal_card = card
             else:
                 if card.value < lowest_normal_card.value and not card.is_special:
                     lowest_normal_card = card
-       return {
+        return {
            'lowest_card': lowest_normal_card,
            'idx': i
-       }
+        }

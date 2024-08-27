@@ -33,13 +33,13 @@ class Player:
                 self.playCard()
 
     def chooseCardHuman(self):
-        for i, cards
+        return
     
     def chooseCard(self):
         if self.player_type == 'human':
-            chooseCardHuman(self)
+            self.chooseCardHuman(self)
         else:
-            chooseCardPC(self)
+            self.chooseCardPC(self)
 
 
 

@@ -4,7 +4,7 @@ from deck import Deck
 from castle import Castle
 from game_config import GameConfig
 from hand import Hand
-from pile i
+from pile import Pile
 
 from collections import deque
 
@@ -24,6 +24,8 @@ for player_id, player in enumerate(player_list):
 # Initialize Deck
 deck = Deck()
 deck.shuffle()
+
+breakpoint()
 
 # Initialize Pile
 pile = Pile()
@@ -50,6 +52,7 @@ player_lowest_cards = {}
 # Get each player's smallest value, non-special card
 for player in player_list:
     player_lowest_cards[player] = player.hand.lowestNormalCard()
+
 starting_card = {'player': None, 'idx': None}
 for player_list_idx, player in enumerate(player_lowest_cards):
     if player_lowest_cards[player]['lowest_card'].value == 4:
@@ -58,7 +61,7 @@ for player_list_idx, player in enumerate(player_lowest_cards):
         starting_card['idx'] = player_lowest_cards[player]['idx']
         break
     elif starting_card:
-        if starting.card > player_lowest_cards[player]['lowest_card'].value
+        if starting_card > player_lowest_cards[player]['lowest_card'].value:
             starting_player_idx = player_list_idx
             starting_card['player'] = player
             starting_card['idx'] = player_lowest_cards[player]['idx']
@@ -70,9 +73,9 @@ for player_list_idx, player in enumerate(player_lowest_cards):
 # Have player with lowest card automatically play the lowest card, then draw a new card
 starting_player = starting_card['player']
 starting_card_idx = starting_card['idx']
-pile.cards.append(starting_player.hand[starting_card_idx])
+pile.cards.append(starting_player.hand.cards[starting_card_idx])
 starting_player.playCard(starting_card_idx)
-starting_player.hand.append(deck.cards[-1])
+starting_player.hand.cards.append(deck.cards[-1])
 deck.drawCard()
         
 # Rearrange player_list so 
@@ -90,9 +93,4 @@ while True:
 
     curr_player.hand.listPlayableCards(pile)
     for card in curr_player:
-        
-
-
-
-
-
+        pass

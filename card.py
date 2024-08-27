@@ -9,7 +9,7 @@ class Card:
         self.rank = rank
         self.value = value
         self.is_special = is_special
-        self.special_proprety = special_property
+        self.special_property = special_property
         self.player_id = None
         self.player_hand_idx = None
         
